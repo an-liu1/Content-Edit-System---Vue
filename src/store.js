@@ -4,13 +4,17 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
-  state: {
+    state: {
+        Authorization: localStorage.getItem('Authorization') ? localStorage.getItem('Authorization') : ''
+    },
+    mutations: {
 
-  },
-  mutations: {
+        changeLogin(state, user) {
+            state.Authorization = user.Authorization;
+            localStorage.setItem('Authorization', user.Authorization);
+        },
+    },
+    actions: {
 
-  },
-  actions: {
-
-  }
+    }
 })

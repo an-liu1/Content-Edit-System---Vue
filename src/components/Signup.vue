@@ -15,7 +15,7 @@
                 </el-form-item>
                 <el-form-item prop="email">
                     <el-input v-model="param.email" placeholder="email">
-                        <el-button slot="prepend" icon="el-icon-email"></el-button>
+                        <el-button slot="prepend" icon="el-icon-s-promotion"></el-button>
                     </el-input>
                 </el-form-item>
                 <el-form-item prop="phone">
@@ -57,6 +57,20 @@ export default {
                     {
                         required: true,
                         message: "Password is a required field.",
+                        trigger: "blur"
+                    }
+                ],
+                email: [
+                    {
+                        required: true,
+                        message: "Email is a required field.",
+                        trigger: "blur"
+                    }
+                ],
+                phone: [
+                    {
+                        required: true,
+                        message: "Phone number is a required field.",
                         trigger: "blur"
                     }
                 ]

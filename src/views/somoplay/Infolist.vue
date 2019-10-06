@@ -3,8 +3,9 @@
         <div class="crumbs">
             <el-breadcrumb separator="/">
                 <el-breadcrumb-item>
-                    <i class="el-icon-folder"></i> SlideShow
+                    <i class="el-icon-folder"></i> SomoPlay
                 </el-breadcrumb-item>
+                 <el-breadcrumb-item>InfoList</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
         <div class="container1">

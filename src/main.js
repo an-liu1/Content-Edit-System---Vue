@@ -16,17 +16,29 @@ import 'element-ui/lib/theme-chalk/index.css';
 
 router.beforeEach((to, from, next) => {
     document.title = `${to.meta.title} | Content Edit System`;
-    const role = localStorage.getItem('ms_username');
+    const role = localStorage.getItem('Authorization');
     if (!role && to.path !== '/login') {
         next('/login');
     }
     else if (to.meta.permission) {
-        console.log(to.meta.permission)
-        role === 'admin' ? next() : next('/403');
+        // role === 'admin' ? next() : next('/footer');
     } else {
         next();
     }
 });
+
+axios.interceptors.request.use(
+    config => {
+        if (localStorage.getItem('Authorization')) {
+            config.headers.Authorization = localStorage.getItem('Authorization');
+        }
+
+        return config;
+    },
+    error => {
+        return Promise.reject(error);
+    });
+
 
 new Vue({
     router,

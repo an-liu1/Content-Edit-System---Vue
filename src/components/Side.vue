@@ -11,23 +11,41 @@
             router
         >
             <template>
-                <el-menu-item>
-                    <i class="fa fa-home"></i>
-                    <span slot="title"> Dashboard</span>
-                </el-menu-item>
+                <router-link tag="el-menu-item" to="/dashboard">
+                    <i class="el-icon-s-home"></i>
+                    <span class="span">&nbsp;&nbsp; Dashboard</span>
+                </router-link>
             </template>
             <template>
                 <el-submenu :index="a">
                     <template slot="title">
-                        <i class="fa fa-edit"></i>
-                        <span slot="title"> SomoPlay</span>
+                        <i class="el-icon-menu"></i>
+                        <span slot="title" class="span">&nbsp;&nbsp; SomoPlay</span>
                     </template>
                     <template v-for="(item,index) in menu">
-                        <router-link tag="el-menu-item" :to="'/' + item" :key="index" :index="index">
-                            <span>{{ item }}</span>
+                        <router-link
+                            tag="el-menu-item"
+                            :to="'/S-' + item"
+                            :key="index"
+                            :index="index"
+                        >
+                            <span class="span">{{ item }}</span>
                         </router-link>
                     </template>
                 </el-submenu>
+            </template>
+
+            <template>
+                <router-link tag="el-menu-item" to="/profile">
+                    <i class="el-icon-user-solid"></i>
+                    <span class="span">&nbsp;&nbsp; Profile</span>
+                </router-link>
+            </template>
+            <template>
+                <el-menu-item @click="logout">
+                    <i class="el-icon-switch-button"></i>
+                    <span class="span">&nbsp;&nbsp; Log Out</span>
+                </el-menu-item>
             </template>
         </el-menu>
     </div>
@@ -43,6 +61,14 @@ export default {
             a: "1"
         };
     },
+    methods: {
+        logout() {
+            localStorage.removeItem("Authorization");
+            localStorage.removeItem("email");
+            localStorage.removeItem("password");
+            this.$router.push("/login");
+        }
+    },
     computed: {
         onRoutes() {
             return this.$route.path.replace("/", "");
@@ -57,7 +83,7 @@ export default {
     mounted() {
         this.$http
             .get(
-                "http://159.89.121.159:3001/somo/contentByApp?appName=somoplay&page=0&size=1000"
+                "http://159.89.121.159:3008/somoInit/searchSomoplayWebByPageAndSection?appName=somoplay&page=0&size=1000"
             )
             .then(response => {
                 return response.data;

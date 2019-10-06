@@ -3,8 +3,9 @@
         <div class="crumbs">
             <el-breadcrumb separator="/">
                 <el-breadcrumb-item>
-                    <i class="el-icon-folder"></i> TopMenu
+                    <i class="el-icon-folder"></i> SomoPlay
                 </el-breadcrumb-item>
+                <el-breadcrumb-item>TopMenu</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
         <div class="container1">
@@ -86,6 +87,9 @@
                 <el-form-item label="nameTr">
                     <el-input v-model="form.nameTr"></el-input>
                 </el-form-item>
+                <el-form-item label="sectionName">
+                    <el-input v-model="form.sectionName"></el-input>
+                </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="editVisible = false">Cancle</el-button>
@@ -138,7 +142,7 @@ export default {
         getData(sectionName, appName, pageName) {
             this.$http
                 .get(
-                    "http://159.89.121.159:3001/somo/contentBySection?appName=" +
+                    "http://159.89.121.159:3008/somoInit/searchSomoplayWebByPageAndSection?appName=" +
                         appName +
                         "&sectionName=" +
                         sectionName +
@@ -157,22 +161,28 @@ export default {
         // handleSearch() {
         //     this.getData("topMenu", "somoplay", "all", this.query.name);
         // },
-        // // 删除操作
-        // handleDelete(index, row) {
-        //     // 二次确认删除
-        //     this.$confirm("确定要删除吗？", "提示", {
-        //         type: "warning"
-        //     })
-        //         .then(() => {
-        //             this.$message.success("删除成功");
-        //             this.tableData.splice(index, 1);
-        //         })
-        //         .catch(() => {});
-        // },
-        // 多选操作
+        // // Delete
+        handleDelete(index, row) {
+            // confirm delete
+            this.$confirm("Are you sure to delete this row？", "WARNING", {
+                type: "warning"
+            }).then(() => {
+                this.$http
+                    .delete("http://159.89.121.159:3008/somo/SomoplayWeb", {data: {"itemId": row._id}})
+                    .then(res => {
+                        const { status } = res;
+                        if (status === 200) {
+                            this.$message.success("Successfully Deleted");
+                            this.tableData.splice(index, 1);
+                        }
+                    });
+            });
+        },
+        // multiSelect
         handleSelectionChange(val) {
             this.multipleSelection = val;
         },
+        //deleteAll
         delAllSelection() {
             const length = this.multipleSelection.length;
             let str = "";
@@ -180,10 +190,10 @@ export default {
             for (let i = 0; i < length; i++) {
                 str += this.multipleSelection[i].name + " ";
             }
-            this.$message.error(`删除了${str}`);
+            this.$message.error(`Deleted ${str}`);
             this.multipleSelection = [];
         },
-        // 编辑操作
+        // Edit
         handleEdit(index, row) {
             this.idx = index;
             this.form = row;
@@ -193,12 +203,11 @@ export default {
         handleAdd() {
             this.addVisible = true;
         },
-        // 保存编辑
+        // saveEdit
         saveEdit() {
-            console.log(this.form);
             this.form.itemId = this.form._id;
             this.$http
-                .put("http://159.89.121.159:3001/somo/content", this.form)
+                .put("http://159.89.121.159:3008/somo/SomoplayWeb", this.form)
                 .then(res => {
                     const { status } = res;
                     if (status === 200) {
@@ -206,18 +215,22 @@ export default {
                         this.$message.success(
                             `Successfully Edit ${this.idx + 1} Row`
                         );
+                        this.$parent.reload();
                     }
                 });
         },
         saveNew() {
             console.log(this.addForm);
             for (const key in this.tableData[1]) {
-                if(this.addForm[key] == undefined){
-                    this.addForm[key] = ""
+                if (this.addForm[key] == undefined) {
+                    this.addForm[key] = "";
                 }
             }
             this.$http
-                .post("http://159.89.121.159:3001/somo/content", this.addForm)
+                .post(
+                    "http://159.89.121.159:3008/somo/SomoplayWeb",
+                    this.addForm
+                )
                 .then(res => {
                     const { status } = res;
                     if (status === 200) {
@@ -226,7 +239,7 @@ export default {
                     }
                 });
         },
-        // 分页导航
+        // Paging
         handlePageChange(val) {
             this.query.pageIndex = val;
             this.getData("topMenu", "somoplay", "all");

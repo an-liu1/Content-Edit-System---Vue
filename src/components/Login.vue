@@ -4,7 +4,7 @@
             <div class="ms-title">Content Edit System</div>
             <el-form :model="param" :rules="rules" ref="login" label-width="0px" class="ms-content">
                 <el-form-item prop="username">
-                    <el-input v-model="param.username" placeholder="username">
+                    <el-input v-model="param.email" placeholder="username">
                         <el-button slot="prepend" icon="el-icon-user"></el-button>
                     </el-input>
                 </el-form-item>
@@ -21,41 +21,75 @@
                 <div class="login-btn">
                     <el-button type="primary" @click="submitForm()">Log In</el-button>
                 </div>
-                <p class="login-tips">New User?  <router-link to="/signup">Start here</router-link></p>
+                <p class="login-tips">
+                    New User?
+                    <router-link to="/signup">Start here</router-link>
+                </p>
             </el-form>
         </div>
     </div>
 </template>
 
 <script>
+import { mapMutations } from "vuex";
 export default {
     data: function() {
         return {
             param: {
-                username: 'admin',
-                password: '123123',
+                email: "",
+                password: ""
             },
             rules: {
-                username: [{ required: true, message: 'Username is a required field.', trigger: 'blur' }],
-                password: [{ required: true, message: 'Password is a required field.', trigger: 'blur' }],
-            },
+                email: [
+                    {
+                        required: true,
+                        message: "Username is a required field.",
+                        trigger: "blur"
+                    }
+                ],
+                password: [
+                    {
+                        required: true,
+                        message: "Password is a required field.",
+                        trigger: "blur"
+                    }
+                ]
+            }
         };
     },
     methods: {
+        ...mapMutations(["changeLogin"]),
         submitForm() {
             this.$refs.login.validate(valid => {
                 if (valid) {
-                    this.$message.success('Sucessfullu Login!');
-                    localStorage.setItem('ms_username', this.param.username);
-                    this.$router.push('/');
+                    this.$http
+                        .post(
+                            "http://159.89.121.159:3008/auth/login",
+                            this.param
+                        )
+                        .then(res => {
+                            console.log(res.data);
+                            this.userToken =
+                                "Bearer " + res.data.data.token;
+                            this.changeLogin({
+                                Authorization: this.userToken
+
+                            });
+                            localStorage.setItem('email', this.param.email);
+                            localStorage.setItem('password', this.param.password);
+                            this.$message.success("Sucessfullu Login!");
+                            this.$router.push("/dashboard");
+                        }).catch(error => {
+                            this.$message.success("Wrong username or password!");
+                            console.log(error)
+                        });
                 } else {
-                    this.$message.error('Username | Password is required!');
-                    console.log('error submit!!');
+                    this.$message.error("Username | Password is required!");
                     return false;
                 }
             });
-        },
-    },
+        }
+    }
 };
 </script>
 
