@@ -1,102 +1,161 @@
 <template>
-  <div>
-    <div class="crumbs">
-      <el-breadcrumb separator="/">
-        <el-breadcrumb-item>
-          <i class="el-icon-folder"></i> SomoPlay
-        </el-breadcrumb-item>
-        <el-breadcrumb-item>Logo</el-breadcrumb-item>
-      </el-breadcrumb>
+    <div>
+        <div class="crumbs">
+            <el-breadcrumb separator="/">
+                <el-breadcrumb-item>
+                    <i class="el-icon-folder"></i>
+                    SomoPlay
+                </el-breadcrumb-item>
+                <el-breadcrumb-item>Logo</el-breadcrumb-item>
+            </el-breadcrumb>
+        </div>
+        <div class="container1">
+            <div class="content-title">Logo</div>
+
+            <div class="crop-demo">
+                <img :src="cropImg" class="pre-img" />
+                <div class="crop-demo-btn">
+                    Select Images
+                    <input
+                        class="crop-input"
+                        type="file"
+                        name="image"
+                        accept="image/*"
+                        @change="setImage"
+                    />
+                </div>
+            </div>
+
+            <el-dialog title="Image Crop" :visible.sync="dialogVisible" width="30%">
+                <vue-cropper
+                    ref="cropper"
+                    :src="imgSrc"
+                    :ready="cropImage"
+                    :zoom="cropImage"
+                    :cropmove="cropImage"
+                    style="width:100%;height:300px;"
+                ></vue-cropper>
+                <span slot="footer" class="dialog-footer">
+                    <el-button @click="cancelCrop">Cancle</el-button>
+                    <el-button type="primary" @click="dialogVisible = false">Submit</el-button>
+                </span>
+            </el-dialog>
+        </div>
     </div>
-    <div class="container1">
-      <el-upload
-        action=""
-        list-type="picture-card"
-        :on-preview="handlePictureCardPreview"
-        :on-remove="handleRemove"
-      >
-        <i class="el-icon-plus"></i>
-      </el-upload>
-      <el-dialog :visible.sync="dialogVisible">
-        <img width="100%" :src="dialogImageUrl" alt />
-      </el-dialog>
-      <img :src="logo1" alt />
-    </div>
-  </div>
 </template>
 
 <script>
+import VueCropper from "vue-cropperjs";
+import "cropperjs/dist/cropper.css";
 export default {
-  data() {
-    return {
-      tableData: [],
-      logo1: "",
-      dialogImageUrl: "",
-      dialogVisible: false
-    };
-  },
-  created() {
-    this.getData("logo", "somoplay", "all");
-  },
-  methods: {
-    getData(sectionName, appName, pageName) {
-      this.$http
-        .get(
-          "http://159.89.121.159:3008/somoInit/searchSomoplayWebByPageAndSection?appName=" +
-            appName +
-            "&sectionName=" +
-            sectionName +
-            "&pageName=" +
-            pageName
-        )
-        .then(({ data }) => {
-          this.tableData = data.data[0];
-          console.log(this.tableData);
-          this.logo1 =
-            "http://159.89.121.159:3001/images/" +
-            this.tableData.mainImageType +
-            "/" +
-            this.tableData.mainImage;
-        });
+    data() {
+        return {
+            defaultSrc: "",
+            fileList: [],
+            imgSrc: "",
+            cropImg: "",
+            dialogVisible: false
+        };
     },
-    handleRemove(file, fileList) {
-      console.log(file, fileList);
+    components: {
+        VueCropper
     },
-    handlePictureCardPreview(file) {
-      this.dialogImageUrl = file.url;
-      this.dialogVisible = true;
+    created() {
+        this.getData("logo", "somoplay", "all");
+        // this.cropImg = this.defaultSrc;
+    },
+    methods: {
+        getData(sectionName, appName, pageName) {
+            this.$http
+                .get(
+                    "http://159.89.121.159:3008/somoInit/searchSomoplayWebByPageAndSection?appName=" +
+                        appName +
+                        "&sectionName=" +
+                        sectionName +
+                        "&pageName=" +
+                        pageName
+                )
+                .then(({ data }) => {
+                    this.defaultSrc =
+                        "http://159.89.121.159:3008/somo/" +
+                        data.data[0].mainImageType +
+                        "/" +
+                        data.data[0].mainImage;
+                    this.cropImg = this.defaultSrc;
+                });
+        },
+
+        setImage(e) {
+            const file = e.target.files[0];
+            if (!file.type.includes("image/")) {
+                return;
+            }
+            const reader = new FileReader();
+            reader.onload = event => {
+                this.dialogVisible = true;
+                this.imgSrc = event.target.result;
+                this.$refs.cropper &&
+                    this.$refs.cropper.replace(event.target.result);
+            };
+            reader.readAsDataURL(file);
+        },
+        cropImage() {
+            this.cropImg = this.$refs.cropper.getCroppedCanvas().toDataURL();
+        },
+        cancelCrop() {
+            this.dialogVisible = false;
+            this.cropImg = this.defaultSrc;
+        }
+        // handleError() {
+        //     this.$message.success(`Failed to upload, try again please!`);
+        // }
     }
-  }
 };
 </script>
 
 <style scoped>
-.handle-box {
-  margin-bottom: 20px;
+.content-title {
+    font-weight: 400;
+    line-height: 50px;
+    margin: 10px 0;
+    font-size: 22px;
+    color: #1f2f3d;
 }
-
-.handle-select {
-  width: 120px;
+.pre-img {
+    width: 250px;
+    height: 250px;
+    display: block;
+    margin: 0 auto;
+    background: #f8f8f8;
+    border: 1px solid #eee;
+    border-radius: 5px;
 }
-
-.handle-input {
-  width: 300px;
-  display: inline-block;
+.crop-demo {
+    display: block;
+    /* align-items: flex-end; */
 }
-.table {
-  width: 100%;
-  font-size: 14px;
+.crop-demo-btn {
+    position: relative;
+    width: 125px;
+    height: 40px;
+    line-height: 40px;
+    padding: 0 20px;
+    margin-left: 30px;
+    background-color: #409eff;
+    color: #fff;
+    font-size: 14px;
+    border-radius: 4px;
+    box-sizing: border-box;
+    display: block;
+    margin: 20px auto;
 }
-.red {
-  color: #ff0000;
-}
-.mr10 {
-  margin-right: 10px;
-}
-.table-td-thumb {
-  display: block;
-  margin: auto;
-  width: 40px;
-  height: 40px;
+.crop-input {
+    position: absolute;
+    width: 100px;
+    height: 40px;
+    left: 0;
+    top: 0;
+    opacity: 0;
+    cursor: pointer;
 }
 </style>

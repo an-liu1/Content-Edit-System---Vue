@@ -143,6 +143,7 @@ export default {
     },
     avatarChange() {
       this.avatarVisible = true;
+
     },
     handleAvatarSuccess(res, file) {
       this.imageUrl = URL.createObjectURL(file.raw);
@@ -160,7 +161,9 @@ export default {
       }
       return file.type && isLt1M;
     },
-    saveAvatar() {}
+    saveAvatar() {
+        
+    }
   },
   mounted() {
     if (document.body.clientWidth < 1500) {

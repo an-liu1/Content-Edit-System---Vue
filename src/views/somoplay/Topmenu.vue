@@ -37,15 +37,6 @@
                 <el-table-column prop="pageName" label="pageName"></el-table-column>
                 <el-table-column prop="sectionName" label="sectionName"></el-table-column>
                 <el-table-column prop="positionName" label="positionName"></el-table-column>
-                <!-- <el-table-column label="头像(查看大图)" align="center">
-                    <template slot-scope="scope">
-                        <el-image
-                            class="table-td-thumb"
-                            :src="scope.row.thumb"
-                            :preview-src-list="[scope.row.thumb]"
-                        ></el-image>
-                    </template>
-                </el-table-column>-->
 
                 <el-table-column label="Operation" width="180" align="center">
                     <template slot-scope="scope">
@@ -142,7 +133,7 @@ export default {
         getData(sectionName, appName, pageName) {
             this.$http
                 .get(
-                    "http://159.89.121.159:3008/somoInit/searchSomoplayWebByPageAndSection?appName=" +
+                    "http://159.89.121.159:3008/somo/searchSomoplayWebByPageAndSection?appName=" +
                         appName +
                         "&sectionName=" +
                         sectionName +
@@ -157,7 +148,6 @@ export default {
                     this.pageTotal = data.data.length;
                 });
         },
-        // 触发搜索按钮
         // handleSearch() {
         //     this.getData("topMenu", "somoplay", "all", this.query.name);
         // },
