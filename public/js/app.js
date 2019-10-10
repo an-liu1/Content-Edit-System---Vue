@@ -1,8 +1,3 @@
-/* Template Name: Ubold - Bootstrap 4 Landing Page Tamplat
-   Author: CoderThemes
-   File Description: Main JS file of the template
-*/
-
 
 ! function($) {
     "use strict";

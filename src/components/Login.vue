@@ -32,6 +32,8 @@
 
 <script>
 import { mapMutations } from "vuex";
+import { authData } from "@/api/somoplay";
+
 export default {
     data: function() {
         return {
@@ -60,29 +62,28 @@ export default {
     methods: {
         ...mapMutations(["changeLogin"]),
         submitForm() {
-            this.$refs.login.validate(valid => {
+            this.$refs.login.validate(async valid => {
                 if (valid) {
-                    this.$http
-                        .post(
-                            "http://159.89.121.159:3008/auth/login",
-                            this.param
-                        )
-                        .then(res => {
-                            console.log(res.data);
-                            this.userToken =
-                                "Bearer " + res.data.data.token;
+                    try {
+                        let res = await authData(this.param);
+                        const { code, data } = res;
+                        if (code === 0) {
+                            this.userToken = "Bearer " + data.token;
                             this.changeLogin({
                                 Authorization: this.userToken
-
                             });
-                            localStorage.setItem('email', this.param.email);
-                            localStorage.setItem('password', this.param.password);
+                            localStorage.setItem("email", this.param.email);
+                            localStorage.setItem(
+                                "password",
+                                this.param.password
+                            );
                             this.$message.success("Sucessfullu Login!");
                             this.$router.push("/dashboard");
-                        }).catch(error => {
-                            this.$message.success("Wrong username or password!");
-                            console.log(error)
-                        });
+                        }
+                    } catch (error) {
+                        this.$message.success("Wrong username or password!");
+                        console.log(error);
+                    }
                 } else {
                     this.$message.error("Username | Password is required!");
                     return false;
@@ -94,6 +95,14 @@ export default {
 </script>
 
 <style scoped>
+html,
+body,
+#app,
+.wrapper {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
 .login-wrap {
     position: relative;
     width: 100%;

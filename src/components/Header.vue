@@ -18,14 +18,15 @@
         <div class="btn-bell">
           <el-tooltip
             effect="dark"
-            :content="message?`${message} unread messages`:`message`"
+            content="Landing Page"
             placement="bottom"
           >
+            <!-- :content="message?`${message} unread messages`:`message`"  -->
             <router-link to="/index">
               <i class="el-icon-bell"></i>
             </router-link>
           </el-tooltip>
-          <span class="btn-bell-badge" v-if="message"></span>
+          <!-- <span class="btn-bell-badge" v-if="message"></span> -->
         </div>
         <!-- portrait -->
         <div class="user-avator">

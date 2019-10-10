@@ -3,7 +3,7 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import axios from 'axios'
-Vue.prototype.$http = axios
+import 'jquery'
 Vue.config.productionTip = false
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap/dist/js/bootstrap.js'
@@ -18,6 +18,15 @@ import '@/config/index'
 router.beforeEach((to, from, next) => {
     document.title = `${to.meta.title} | Content Edit System`;
     const role = localStorage.getItem('Authorization');
+    // if(!role){
+    //     if(['/signup','/index','/'].indexOf(to.path) !== -1){
+    //         next();
+    //     }else{
+    //         next('/login');
+    //     }
+    // }else{
+    //     next();
+    // }
     if (!role && to.path !== '/login') {
         next('/login');
     }

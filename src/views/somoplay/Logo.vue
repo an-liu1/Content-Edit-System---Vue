@@ -37,7 +37,7 @@
                 ></vue-cropper>
                 <span slot="footer" class="dialog-footer">
                     <el-button @click="cancelCrop">Cancle</el-button>
-                    <el-button type="primary" @click="dialogVisible = false">Submit</el-button>
+                    <el-button type="primary" @click="saveCrop">Submit</el-button>
                 </span>
             </el-dialog>
         </div>
@@ -47,11 +47,13 @@
 <script>
 import VueCropper from "vue-cropperjs";
 import "cropperjs/dist/cropper.css";
-import { getData, getImg } from "@/api/somoplay";
+import { getData, getImg, newData, editData } from "@/api/somoplay";
 export default {
-    name: 'Logo',
+    name: "Logo",
+    inject: ["reload"],
     data() {
         return {
+            form: {},
             defaultSrc: "",
             fileList: [],
             imgSrc: "",
@@ -71,6 +73,7 @@ export default {
             let res = await getData(
                 "?appName=somoplay&sectionName=Logo&pageName=all"
             );
+            this.form = res.data[0];
             this.defaultSrc = getImg(
                 res.data[0].mainImageType + "/" + res.data[0].mainImage
             );
@@ -94,6 +97,27 @@ export default {
         },
         cropImage() {
             this.cropImg = this.$refs.cropper.getCroppedCanvas().toDataURL();
+            // this.cropImgURL = this.$refs.cropper.cropper.url;
+        },
+        async saveCrop() {
+            // let imageDataq = this.cropImg.split(',')[1]
+            let params = {
+                mainImageType: "somo/somoplayWeb",
+                imageData: this.cropImg
+            };
+            let res = await newData(params);
+            const { code, data } = res;
+            if (code === 0) {
+                this.form.itemId = this.form._id;
+                this.form.mainImage = data.mainImage;
+                let result = await editData(this.form);
+                const { code } = result;
+                if (code === 0) {
+                    this.dialogVisible = false;
+                    this.$message.success(`Successfully Insert a new Row`);
+                    this.reload();
+                }
+            }
         },
         cancelCrop() {
             this.dialogVisible = false;
@@ -129,7 +153,7 @@ export default {
 }
 .crop-demo-btn {
     position: relative;
-    width: 125px;
+    width: 130px;
     height: 40px;
     line-height: 40px;
     padding: 0 20px;

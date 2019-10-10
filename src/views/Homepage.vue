@@ -53,7 +53,7 @@
                                         class="text-white-50 home-desc mb-5"
                                         v-for="(item,index) in list.slice(25,27)"
                                         :key="index"
-                                    >{{item.nameEn}}</p> -->
+                                    >{{item.nameEn}}</p>-->
                                     <div class="subscribe">
                                         <form>
                                             <div class="row">
@@ -965,7 +965,7 @@
                             </div>
                             <!-- <div v-for="(item,index) in list.slice(13,16)" :key="index">
                                 <p class="text-white-50">{{item.nameEn}}</p>
-                            </div> -->
+                            </div>-->
                             <!-- <p class="text-white-50">Ubold is a fully featured premium admin template built on top of awesome Bootstrap 4.1.3, modern web technology HTML5, CSS3 and jQuery.</p> -->
                         </div>
                     </div>
@@ -1138,7 +1138,7 @@ export default {
             navItem: {},
             list: {},
             slideShow: {},
-            footer:{}
+            footer: {}
         };
     },
     methods: {
@@ -1176,7 +1176,7 @@ export default {
         this.getLogo();
         this.getList();
         this.getSlideShow();
-        this.getFooter()
+        this.getFooter();
     },
     computed: {
         imgs: function() {
@@ -1230,6 +1230,7 @@ body {
     font-family: "Nunito", sans-serif;
     font-size: 14px;
     background-color: #ffffff;
+    height: auto !important;
 }
 
 h1,
@@ -1800,4 +1801,4 @@ p {
         text-align: center;
     }
 }
-</style>>
+</style>

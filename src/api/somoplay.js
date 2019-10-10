@@ -1,7 +1,7 @@
 import request from './request'
 
-const getAPI = "http://159.89.121.159:3008/somo/searchSomoplayWebByPageAndSection";  //GET
-const otherAPI = "http://159.89.121.159:3008/somo/SomoplayWeb";  //POST PUT DELETE
+const getAPI = "http://159.89.121.159:3008/somoInit/searchSomoplayWebByPageAndSection";  //GET
+const otherAPI = "http://159.89.121.159:3008/somo/somoplayWeb";  //POST PUT DELETE
 const AuthAPI = "http://159.89.121.159:3008/auth/login";
 const imgAPI = "http://159.89.121.159:3008/somo/";
 
@@ -28,7 +28,3 @@ export const authData = (params) => {
 export const getImg = (address) => {
     return imgAPI + address
 }
-
-// export const uploadImg = (address) => {
-//     return imgAPI + address
-// }
