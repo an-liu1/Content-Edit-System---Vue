@@ -8,6 +8,27 @@ This is the content edit system designed by Vue.js. The purpose of starting this
 npm install
 ```
 
+build a file name .eslintrc.js, and input the code below in it
+```
+module.exports = {
+  root: true,
+  env: {
+    node: true
+  },
+  'extends': [
+    'plugin:vue/essential',
+    'eslint:recommended'
+  ],
+  rules: {
+    'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off'
+  },
+  parserOptions: {
+    parser: 'babel-eslint'
+  }
+}
+
+```
 ### Compiles and hot-reloads for development
 ```
 npm run serve
