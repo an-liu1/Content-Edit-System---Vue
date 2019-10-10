@@ -35,4 +35,5 @@ npm run serve
 ```
 ## Login auth
 username: admin@somoplay.com
+
 password: 111111
