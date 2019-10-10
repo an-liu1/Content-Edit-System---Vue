@@ -67,8 +67,8 @@
         </div>
 
         <!-- EditBoard -->
-        <el-dialog title="Eidt" :visible.sync="editVisible" width="30%">
-            <el-form ref="form" :model="form" label-width="70px">
+        <el-dialog title="Eidt" :visible.sync="editVisible" width="35%">
+            <el-form ref="form" :model="form" label-width="150px">
                 <el-form-item label="nameEn">
                     <el-input v-model="form.nameEn"></el-input>
                 </el-form-item>
@@ -78,9 +78,6 @@
                 <el-form-item label="nameTr">
                     <el-input v-model="form.nameTr"></el-input>
                 </el-form-item>
-                <el-form-item label="sectionName">
-                    <el-input v-model="form.sectionName"></el-input>
-                </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="editVisible = false">Cancle</el-button>
@@ -89,83 +86,95 @@
         </el-dialog>
 
         <!-- AddBoard -->
-        <el-dialog title="Add" :visible.sync="addVisible" width="50%">
+        <el-dialog title="Add" :visible.sync="addVisible" width="35%">
             <el-form ref="addForm" :model="addForm" label-width="150px">
-                <el-form-item v-for="(item,index) in tableData[1]" :key="index" :label="index">
+                <!-- <el-form-item v-for="(item,index) in tableData[1]" :key="index" :label="index">
                     <el-input v-model="addForm[index]"></el-input>
+                </el-form-item>-->
+                <el-form-item label="nameEn">
+                    <el-input v-model="addForm.nameEn"></el-input>
+                </el-form-item>
+                <el-form-item label="nameCh">
+                    <el-input v-model="addForm.nameCh"></el-input>
+                </el-form-item>
+                <el-form-item label="nameTr">
+                    <el-input v-model="addForm.nameTr" @keyup.enter.native="saveNew"></el-input>
+                </el-form-item>
+                <el-form-item label="appName">
+                    <el-input v-model="addForm.appName" disabled="true"></el-input>
+                </el-form-item>
+                <el-form-item label="pageName">
+                    <el-input v-model="addForm.pageName" disabled="true"></el-input>
+                </el-form-item>
+                <el-form-item label="sectionName">
+                    <el-input v-model="addForm.sectionName" disabled="true"></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="addVisible = false">Cancle</el-button>
-                <el-button type="primary" @click="saveNew">Submit</el-button>
+                <el-button type="primary" @click.enter="saveNew">Submit</el-button>
             </span>
         </el-dialog>
     </div>
 </template>
 
 <script>
+import { getData, newData, deleteData, editData } from "@/api/somoplay";
 export default {
+    inject: ["reload"],
+    name: "topMenu",
     data() {
         return {
             query: {
                 address: "",
                 name: "",
                 pageIndex: 1,
-                pageSize: 9
+                pageSize: 10
             },
             tableData: [],
-            datata: {},
             multipleSelection: [],
             delList: [],
             editVisible: false,
             addVisible: false,
             pageTotal: 0,
             form: {},
-            addForm: {},
+            addForm: {
+                appName: "somoplay",
+                pageName: "all",
+                sectionName: "topMenu"
+            },
             idx: -1,
             id: -1
         };
     },
     created() {
-        this.getData("topMenu", "somoplay", "all");
+        this.handleData();
     },
     methods: {
-        getData(sectionName, appName, pageName) {
-            this.$http
-                .get(
-                    "http://159.89.121.159:3008/somo/searchSomoplayWebByPageAndSection?appName=" +
-                        appName +
-                        "&sectionName=" +
-                        sectionName +
-                        "&pageName=" +
-                        pageName
-                )
-                .then(({ data }) => {
-                    this.tableData = data.data.slice(
-                        (this.query.pageIndex - 1) * this.query.pageSize,
-                        this.query.pageIndex * this.query.pageSize
-                    );
-                    this.pageTotal = data.data.length;
-                });
+        async handleData() {
+            let address = "?appName=somoplay&sectionName=topMenu&pageName=all";
+            let res = await getData(address);
+            this.tableData = res.data.slice(
+                (this.query.pageIndex - 1) * this.query.pageSize,
+                this.query.pageIndex * this.query.pageSize
+            );
+            this.pageTotal = res.data.length;
         },
+
         // handleSearch() {
         //     this.getData("topMenu", "somoplay", "all", this.query.name);
         // },
-        // // Delete
-        handleDelete(index, row) {
+
+        // Delete
+        async handleDelete(index, row) {
             // confirm delete
             this.$confirm("Are you sure to delete this row？", "WARNING", {
                 type: "warning"
             }).then(() => {
-                this.$http
-                    .delete("http://159.89.121.159:3008/somo/SomoplayWeb", {data: {"itemId": row._id}})
-                    .then(res => {
-                        const { status } = res;
-                        if (status === 200) {
-                            this.$message.success("Successfully Deleted");
-                            this.tableData.splice(index, 1);
-                        }
-                    });
+                deleteData({ itemId: row._id });
+
+                this.$message.success("Successfully Deleted");
+                this.tableData.splice(index, 1);
             });
         },
         // multiSelect
@@ -188,51 +197,43 @@ export default {
             this.idx = index;
             this.form = row;
             this.editVisible = true;
-            // console.log(index + "------" + row._id);
         },
+        // saveEdit
+        async saveEdit() {
+            this.form.itemId = this.form._id;
+            let res = await editData(this.form);
+
+            const { code } = res;
+            if (code === 0) {
+                this.editVisible = false;
+                this.$message.success(`Successfully Edit ${this.idx + 1} Row`);
+            }
+        },
+        //add
         handleAdd() {
             this.addVisible = true;
         },
-        // saveEdit
-        saveEdit() {
-            this.form.itemId = this.form._id;
-            this.$http
-                .put("http://159.89.121.159:3008/somo/SomoplayWeb", this.form)
-                .then(res => {
-                    const { status } = res;
-                    if (status === 200) {
-                        this.editVisible = false;
-                        this.$message.success(
-                            `Successfully Edit ${this.idx + 1} Row`
-                        );
-                        this.$parent.reload();
-                    }
-                });
-        },
-        saveNew() {
+        //save new
+        async saveNew() {
             console.log(this.addForm);
             for (const key in this.tableData[1]) {
                 if (this.addForm[key] == undefined) {
                     this.addForm[key] = "";
                 }
             }
-            this.$http
-                .post(
-                    "http://159.89.121.159:3008/somo/SomoplayWeb",
-                    this.addForm
-                )
-                .then(res => {
-                    const { status } = res;
-                    if (status === 200) {
-                        this.addVisible = false;
-                        this.$message.success(`Successfully Insert a new Row`);
-                    }
-                });
+            let res = await newData(this.addForm);
+
+            const { code } = res;
+            if (code === 0) {
+                this.addVisible = false;
+                this.$message.success(`Successfully Insert a new Row`);
+                this.reload();
+            }
         },
         // Paging
         handlePageChange(val) {
             this.query.pageIndex = val;
-            this.getData("topMenu", "somoplay", "all");
+            this.handleData();
         }
     }
 };

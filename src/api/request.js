@@ -49,7 +49,11 @@ export default function request(method, url, data) {
         })
     } else if (method === 'delete') {
         return axios.delete(url, {
-            params: data
+            data
         })
+    } else if (method === 'put') {
+        return axios.put(url, data)
+    } else if (method === 'auth') {
+        return axios.post(url, data)
     }
 }

@@ -6,9 +6,9 @@ Vue.use(Router)
 export default new Router({
 
     routes: [
-        // { path: '*', redirect: '/add' },
-        { path: '/', redirect: '/dashboard' },
-        // { path: '/add/:appName/:sectionName/:pageName', component: () => import('./components/Add') },
+        { path: '*', redirect: '/index' },
+        { path: '/', redirect: '/index' },
+        {path:'/index', component: () => import('./views/Homepage'), meta: { title: 'Index' }},
         {
             path: '/',
             component: () => import('./views/Home'),
@@ -30,7 +30,7 @@ export default new Router({
 
             ]
         },
-        { path: '/login', component: () => import('./components/Login.vue') },
-        { path: '/signup', component: () => import('./components/Signup.vue') }
+        { path: '/login', component: () => import('./components/Login.vue'), meta: { title: 'Login' }},
+        { path: '/signup', component: () => import('./components/Signup.vue'), meta: { title: 'Signup' } }
     ]
 })

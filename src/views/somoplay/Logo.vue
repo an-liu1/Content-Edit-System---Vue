@@ -47,7 +47,9 @@
 <script>
 import VueCropper from "vue-cropperjs";
 import "cropperjs/dist/cropper.css";
+import { getData, getImg } from "@/api/somoplay";
 export default {
+    name: 'Logo',
     data() {
         return {
             defaultSrc: "",
@@ -61,28 +63,19 @@ export default {
         VueCropper
     },
     created() {
-        this.getData("logo", "somoplay", "all");
+        this.getData();
         // this.cropImg = this.defaultSrc;
     },
     methods: {
-        getData(sectionName, appName, pageName) {
-            this.$http
-                .get(
-                    "http://159.89.121.159:3008/somoInit/searchSomoplayWebByPageAndSection?appName=" +
-                        appName +
-                        "&sectionName=" +
-                        sectionName +
-                        "&pageName=" +
-                        pageName
-                )
-                .then(({ data }) => {
-                    this.defaultSrc =
-                        "http://159.89.121.159:3008/somo/" +
-                        data.data[0].mainImageType +
-                        "/" +
-                        data.data[0].mainImage;
-                    this.cropImg = this.defaultSrc;
-                });
+        async getData() {
+            let res = await getData(
+                "?appName=somoplay&sectionName=Logo&pageName=all"
+            );
+            this.defaultSrc = getImg(
+                res.data[0].mainImageType + "/" + res.data[0].mainImage
+            );
+
+            this.cropImg = this.defaultSrc;
         },
 
         setImage(e) {

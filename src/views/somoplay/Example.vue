@@ -1,0 +1,292 @@
+<template>
+    <div>
+        <div class="crumbs">
+            <el-breadcrumb separator="/">
+                <el-breadcrumb-item>
+                    <i class="el-icon-folder"></i> SomoPlay
+                </el-breadcrumb-item>
+                <el-breadcrumb-item>TopMenu</el-breadcrumb-item>
+            </el-breadcrumb>
+        </div>
+        <div class="container1">
+            <div class="handle-box">
+                <el-button type="primary" icon="el-icon-circle-plus-outline" @click="handleAdd">New</el-button>
+                <el-button
+                    type="primary"
+                    icon="el-icon-delete"
+                    class="handle-del mr10"
+                    @click="delAllSelection"
+                >Batch Remove</el-button>
+                <!-- 
+                <el-input v-model="query.name" placeholder="name" class="handle-input mr10"></el-input>
+                <el-button type="primary" icon="el-icon-search" @click="handleSearch">Search</el-button>-->
+            </div>
+            <el-table
+                :data="tableData"
+                border
+                class="table"
+                ref="multipleTable"
+                header-cell-class-name="table-header"
+                @selection-change="handleSelectionChange"
+            >
+                <el-table-column type="selection" width="55" align="center"></el-table-column>
+                <el-table-column prop="nameEn" label="nameEn"></el-table-column>
+                <el-table-column prop="nameCh" label="nameCh"></el-table-column>
+                <el-table-column prop="nameTr" label="nameTr"></el-table-column>
+                <el-table-column prop="appName" label="appName"></el-table-column>
+                <el-table-column prop="pageName" label="pageName"></el-table-column>
+                <el-table-column prop="sectionName" label="sectionName"></el-table-column>
+                <el-table-column prop="positionName" label="positionName"></el-table-column>
+
+                <el-table-column label="Operation" width="180" align="center">
+                    <template slot-scope="scope">
+                        <el-button
+                            type="text"
+                            icon="el-icon-edit"
+                            @click="handleEdit(scope.$index, scope.row)"
+                        >Edit</el-button>
+                        <el-button
+                            type="text"
+                            icon="el-icon-delete"
+                            class="red"
+                            @click="handleDelete(scope.$index, scope.row)"
+                        >Delete</el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <div class="pagination">
+                <el-pagination
+                    background
+                    layout="total, prev, pager, next, jumper"
+                    :current-page="query.pageIndex"
+                    :page-size="query.pageSize"
+                    :total="pageTotal"
+                    @current-change="handlePageChange"
+                ></el-pagination>
+            </div>
+        </div>
+
+        <!-- EditBoard -->
+        <el-dialog title="Eidt" :visible.sync="editVisible" width="30%">
+            <el-form ref="form" :model="form" label-width="70px">
+                <el-form-item label="nameEn">
+                    <el-input v-model="form.nameEn"></el-input>
+                </el-form-item>
+                <el-form-item label="nameCh">
+                    <el-input v-model="form.nameCh"></el-input>
+                </el-form-item>
+                <el-form-item label="nameTr">
+                    <el-input v-model="form.nameTr"></el-input>
+                </el-form-item>
+                <el-form-item label="sectionName">
+                    <el-input v-model="form.sectionName"></el-input>
+                </el-form-item>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="editVisible = false">Cancle</el-button>
+                <el-button type="primary" @click="saveEdit">Submit</el-button>
+            </span>
+        </el-dialog>
+
+        <!-- AddBoard -->
+        <el-dialog title="Add" :visible.sync="addVisible" width="50%">
+            <el-form ref="addForm" :model="addForm" label-width="150px">
+                <el-form-item v-for="(item,index) in tableData[1]" :key="index" :label="index">
+                    <el-input v-model="addForm[index]"></el-input>
+                </el-form-item>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="addVisible = false">Cancle</el-button>
+                <el-button type="primary" @click="saveNew">Submit</el-button>
+            </span>
+        </el-dialog>
+    </div>
+</template>
+
+<script>
+import { getData, newData, deleteData, editData } from "@/api/somoplay";
+export default {
+    data() {
+        return {
+            query: {
+                address: "",
+                name: "",
+                pageIndex: 1,
+                pageSize: 9
+            },
+            tableData: [],
+            datata: {},
+            multipleSelection: [],
+            delList: [],
+            editVisible: false,
+            addVisible: false,
+            pageTotal: 0,
+            form: {},
+            addForm: {},
+            idx: -1,
+            id: -1
+        };
+    },
+    created() {
+        // this.getData("topMenu", "somoplay", "all");
+        this.handleData();
+    },
+    methods: {
+        // getData(sectionName, appName, pageName) {
+        //     this.$http
+        //         .get(
+        //             "http://159.89.121.159:3008/somo/searchSomoplayWebByPageAndSection?appName=" +
+        //                 appName +
+        //                 "&sectionName=" +
+        //                 sectionName +
+        //                 "&pageName=" +
+        //                 pageName
+        //         )
+        //         .then(({ data }) => {
+        //             this.tableData = data.data.slice(
+        //                 (this.query.pageIndex - 1) * this.query.pageSize,
+        //                 this.query.pageIndex * this.query.pageSize
+        //             );
+        //             this.pageTotal = data.data.length;
+        //         });
+        // },
+
+        async handleData() {
+            let address = "?appName=somoplay&sectionName=topMenu&pageName=all";
+            let res = await getData(address);
+            this.tableData = res.data.slice(
+                (this.query.pageIndex - 1) * this.query.pageSize,
+                this.query.pageIndex * this.query.pageSize
+            );
+            this.pageTotal = res.data.length;
+        },
+
+        // handleSearch() {
+        //     this.getData("topMenu", "somoplay", "all", this.query.name);
+        // },
+        // // Delete
+        async handleDelete(index, row) {
+            // confirm delete
+            this.$confirm("Are you sure to delete this row？", "WARNING", {
+                type: "warning"
+            }).then(() => {
+                 deleteData({ itemId: row._id })
+                // this.$http
+                //     .delete("http://159.89.121.159:3008/somo/SomoplayWeb", {
+                //         data: { itemId: row._id }
+                //     })
+                //     .then(res => {
+                    // console.log(res)
+                        // const { code } = res;
+                        // if (code === 0) {
+                            this.$message.success("Successfully Deleted");
+                            this.tableData.splice(index, 1);
+                        // }
+            //         });
+            });
+        },
+        // multiSelect
+        handleSelectionChange(val) {
+            this.multipleSelection = val;
+        },
+        //deleteAll
+        delAllSelection() {
+            const length = this.multipleSelection.length;
+            let str = "";
+            this.delList = this.delList.concat(this.multipleSelection);
+            for (let i = 0; i < length; i++) {
+                str += this.multipleSelection[i].name + " ";
+            }
+            this.$message.error(`Deleted ${str}`);
+            this.multipleSelection = [];
+        },
+        // Edit
+        handleEdit(index, row) {
+            this.idx = index;
+            this.form = row;
+            this.editVisible = true;
+            // console.log(index + "------" + row._id);
+        },
+        // saveEdit
+        async saveEdit() {
+            this.form.itemId = this.form._id;
+            let res = await editData(this.form)
+            // this.$http
+            //     .put("http://159.89.121.159:3008/somo/SomoplayWeb", this.form)
+            //     .then(res => {
+                    const { code } = res;
+                    if (code === 0) {
+                        this.editVisible = false;
+                        this.$message.success(
+                            `Successfully Edit ${this.idx + 1} Row`
+                        );
+                    }
+                // });
+        },
+        //add
+        handleAdd() {
+            this.addVisible = true;
+        },
+        //save new
+        async saveNew() {
+            console.log(this.addForm);
+            for (const key in this.tableData[1]) {
+                if (this.addForm[key] == undefined) {
+                    this.addForm[key] = "";
+                }
+            }
+            let res = await newData(this.addForm) 
+            // this.$http
+            //     .post(
+            //         "http://159.89.121.159:3008/somo/SomoplayWeb",
+            //         this.addForm
+            //     )
+            //     .then(res => {
+                    console.log(res)
+                    const { code } = res;
+                    if (code === 0) {
+                        this.addVisible = false;
+                        this.$message.success(`Successfully Insert a new Row`);
+                    }
+                // });
+        },
+        // Paging
+        handlePageChange(val) {
+            this.query.pageIndex = val;
+            // this.getData("topMenu", "somoplay", "all");
+            this.handleData();
+        }
+    }
+};
+</script>
+
+<style scoped>
+.handle-box {
+    margin-bottom: 20px;
+}
+
+.handle-select {
+    width: 120px;
+}
+
+.handle-input {
+    width: 300px;
+    display: inline-block;
+}
+.table {
+    width: 100%;
+    font-size: 14px;
+}
+.red {
+    color: #ff0000;
+}
+.mr10 {
+    margin-right: 10px;
+}
+.table-td-thumb {
+    display: block;
+    margin: auto;
+    width: 40px;
+    height: 40px;
+}
+</style>

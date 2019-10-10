@@ -12,6 +12,7 @@ Vue.use(VueSlimScroll)
 import Element from 'element-ui';
 Vue.use(Element, { size: 'small', zIndex: 3000 });
 import 'element-ui/lib/theme-chalk/index.css';
+import '@/config/index'
 
 
 router.beforeEach((to, from, next) => {

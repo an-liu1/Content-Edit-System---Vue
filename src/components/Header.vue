@@ -21,7 +21,7 @@
             :content="message?`${message} unread messages`:`message`"
             placement="bottom"
           >
-            <router-link to="/tabs">
+            <router-link to="/index">
               <i class="el-icon-bell"></i>
             </router-link>
           </el-tooltip>
@@ -50,7 +50,7 @@
     <el-dialog title="Change Your Avatar" :visible.sync="avatarVisible" width="221px">
       <el-upload
         class="avatar-uploader"
-        action="https://jsonplaceholder.typicode.com/posts/"
+        action="http://159.89.121.159:3008/somo/"
         :show-file-list="false"
         :on-success="handleAvatarSuccess"
         :before-upload="beforeAvatarUpload"
@@ -71,6 +71,7 @@
 </template>
 <script>
 import bus from "./bus.js";
+import { authData } from '@/api/somoplay'
 export default {
   data() {
     return {
@@ -89,16 +90,17 @@ export default {
     }
   },
   created() {
-    this.$http
-      .post("http://159.89.121.159:3008/auth/login", {
-        email: localStorage.getItem("email"),
-        password: localStorage.getItem("password")
-      })
-      .then(({ data }) => {
-        this.name = data.data.firstName;
-      });
+      this.handleGetData()
   },
   methods: {
+    async handleGetData(){
+        let res = await authData({
+        email: localStorage.getItem("email"),
+        password: localStorage.getItem("password")
+      });
+        this.name = res.data.firstName;
+   
+    },
     handleCommand(command) {
       if (command == "loginout") {
         localStorage.removeItem("Authorization");

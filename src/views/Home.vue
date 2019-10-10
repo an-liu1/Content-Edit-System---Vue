@@ -17,6 +17,11 @@
     </div>
 </template>
 
+<style scoped>
+@import "../assets/css/main.css";
+@import "../assets/css/color-adjustment.css";
+</style>
+
 <script>
 import Header from "@/components/Header.vue";
 import Side from "@/components/Side.vue";
