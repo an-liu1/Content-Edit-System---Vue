@@ -120,6 +120,7 @@
 
 <script>
 import { getData, newData, deleteData, editData } from "@/api/somoplay";
+// import packaging from '@/components/packaging'
 export default {
     inject: ["reload"],
     name: "topMenu",
@@ -150,6 +151,7 @@ export default {
     created() {
         this.handleData();
     },
+
     methods: {
         async handleData() {
             let address = "?appName=somoplay&sectionName=topMenu&pageName=all";
@@ -166,8 +168,8 @@ export default {
         // },
 
         // Delete
-        async handleDelete(index, row) {
-            // confirm delete
+        handleDelete(index, row) {
+            //confirm delete
             this.$confirm("Are you sure to delete this row？", "WARNING", {
                 type: "warning"
             }).then(() => {
@@ -176,6 +178,7 @@ export default {
                 this.$message.success("Successfully Deleted");
                 this.tableData.splice(index, 1);
             });
+            // packaging.Delete(index,row)
         },
         // multiSelect
         handleSelectionChange(val) {

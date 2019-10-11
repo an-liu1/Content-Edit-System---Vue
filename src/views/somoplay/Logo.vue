@@ -97,35 +97,34 @@ export default {
         },
         cropImage() {
             this.cropImg = this.$refs.cropper.getCroppedCanvas().toDataURL();
-            // this.cropImgURL = this.$refs.cropper.cropper.url;
         },
         async saveCrop() {
-            // let imageDataq = this.cropImg.split(',')[1]
             let params = {
                 mainImageType: "somo/somoplayWeb",
                 imageData: this.cropImg
             };
-            let res = await newData(params);
-            const { code, data } = res;
-            if (code === 0) {
-                this.form.itemId = this.form._id;
-                this.form.mainImage = data.mainImage;
-                let result = await editData(this.form);
-                const { code } = result;
+            try {
+                let res = await newData(params);
+                const { code, data } = res;
                 if (code === 0) {
-                    this.dialogVisible = false;
-                    this.$message.success(`Successfully Insert a new Row`);
-                    this.reload();
+                    this.form.itemId = this.form._id;
+                    this.form.mainImage = data.mainImage;
+                    let result = await editData(this.form);
+                    const { code } = result;
+                    if (code === 0) {
+                        this.dialogVisible = false;
+                        this.$message.success(`Successfully Insert a new Row`);
+                        this.reload();
+                    }
                 }
+            } catch (e) {
+                this.$message.error(`Failed to upload, try again please!`);
             }
         },
         cancelCrop() {
             this.dialogVisible = false;
             this.cropImg = this.defaultSrc;
         }
-        // handleError() {
-        //     this.$message.success(`Failed to upload, try again please!`);
-        // }
     }
 };
 </script>

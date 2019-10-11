@@ -10,7 +10,7 @@ import 'bootstrap/dist/js/bootstrap.js'
 import VueSlimScroll from 'vue-slimscroll'
 Vue.use(VueSlimScroll)
 import Element from 'element-ui';
-Vue.use(Element, { size: 'small', zIndex: 3000 });
+Vue.use(Element, { size: 'small', zIndex: 3000});
 import 'element-ui/lib/theme-chalk/index.css';
 import '@/config/index'
 
@@ -18,23 +18,24 @@ import '@/config/index'
 router.beforeEach((to, from, next) => {
     document.title = `${to.meta.title} | Content Edit System`;
     const role = localStorage.getItem('Authorization');
-    // if(!role){
-    //     if(['/signup','/index','/'].indexOf(to.path) !== -1){
-    //         next();
-    //     }else{
-    //         next('/login');
-    //     }
-    // }else{
+
+    if(!to.matched.some(route => route.meta.permission)){
+        if (!role && to.path !== '/login') {
+            next('/login');
+        }else{
+            next()
+        }
+    }else{
+        next()
+    }
+    // if (!role && to.path !== '/login') {
+    //     next('/login');
+    // }
+    // else if (to.meta.permission) {
+    //     // role === 'admin' ? next() : next('/footer');
+    // } else {
     //     next();
     // }
-    if (!role && to.path !== '/login') {
-        next('/login');
-    }
-    else if (to.meta.permission) {
-        // role === 'admin' ? next() : next('/footer');
-    } else {
-        next();
-    }
 });
 
 axios.interceptors.request.use(

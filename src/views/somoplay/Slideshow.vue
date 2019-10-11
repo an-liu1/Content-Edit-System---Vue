@@ -88,6 +88,23 @@
                 <el-form-item label="nameTr">
                     <el-input v-model="form.nameTr"></el-input>
                 </el-form-item>
+                <el-form-item label="image">
+                    <el-upload
+                        class="avatar-uploader"
+                        action="https://jsonplaceholder.typicode.com/posts/"
+                        :show-file-list="false"
+                        :on-success="handleAvatarSuccess"
+                        :before-upload="beforeAvatarUpload"
+                    >
+                        <img v-if="imageUrl" :src="imageUrl" class="avatar" />
+                        <img
+                            v-else
+                            :src="eidtImg(form.mainImageType, form.mainImage)"
+                            class="avatar"
+                        />
+                        <!-- <i v-else class="el-icon-plus avatar-uploader-icon"></i> -->
+                    </el-upload>
+                </el-form-item>
                 <el-form-item label="descriptionEn">
                     <el-input type="textarea" size="medium" v-model="form.descriptionEn"></el-input>
                 </el-form-item>
@@ -182,6 +199,8 @@ export default {
             },
             idx: -1,
             id: -1,
+            imageUrl: "",
+            imageData: "",
             imgList: []
         };
     },
@@ -196,6 +215,11 @@ export default {
                 );
                 // this.imgList.push(imgaddress);
                 return imgaddress;
+            };
+        },
+        eidtImg: function() {
+            return function(mainImageType, mainImage) {
+                return getImg(mainImageType + "/" + mainImage);
             };
         }
     },
@@ -257,13 +281,30 @@ export default {
         },
         // saveEdit
         async saveEdit() {
-            this.form.itemId = this.form._id;
-            let res = await editData(this.form);
+            // console.log(this.imageData)
+            let params = {
+                mainImageType: "somo/somoplayWeb",
+                imageData: this.imageData
+            };
+            try {
+                let res = await newData(params);
+                const { code, data } = res;
+                if (code === 0) {
+                    this.form.itemId = this.form._id;
+                    this.form.mainImage = data.mainImage;
+                    this.form.mainImageType = "somo/somoplayWeb";
+                    let result = await editData(this.form);
 
-            const { code } = res;
-            if (code === 0) {
-                this.editVisible = false;
-                this.$message.success(`Successfully Edit ${this.idx + 1} Row`);
+                    const { code } = result;
+                    if (code === 0) {
+                        this.editVisible = false;
+                        this.$message.success(
+                            `Successfully Edit ${this.idx + 1} Row`
+                        );
+                    }
+                }
+            } catch (e) {
+                this.$message.error(`Failed to update, try again please!`);
             }
         },
         //add
@@ -291,6 +332,51 @@ export default {
         handlePageChange(val) {
             this.query.pageIndex = val;
             this.handleData();
+        },
+        getBase64(file) {
+            return new Promise(function(resolve, reject) {
+                let reader = new FileReader();
+                let imgResult = "";
+                reader.readAsDataURL(file);
+                reader.onload = function() {
+                    imgResult = reader.result;
+                };
+                reader.onerror = function(error) {
+                    reject(error);
+                };
+                reader.onloadend = function() {
+                    resolve(imgResult);
+                };
+            });
+        },
+
+        handleAvatarSuccess(res, file) {
+            this.imageUrl = URL.createObjectURL(file.raw);
+            this.getBase64(file.raw).then(res => {
+                this.imageData = res
+            });
+        },
+        beforeAvatarUpload(file) {
+            const imgAccept = [
+                "image/gif",
+                "image/jpeg",
+                "image/jpg",
+                "image/png"
+            ];
+
+            const isLt2M = file.size / 1024 / 1024 < 2;
+
+            if (imgAccept.indexOf(file.type) == -1) {
+                this.$message.error(
+                    "We only support PNG, GIF, JPEG, or JPG pictures."
+                );
+            }
+            if (!isLt2M) {
+                this.$message.error(
+                    "Please upload a picture smaller than 2 MB.!"
+                );
+            }
+            return file.type && isLt2M;
         }
     }
 };
@@ -324,5 +410,28 @@ export default {
     margin: auto;
     width: 40px;
     height: 40px;
+}
+.avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+    border-color: #409eff;
+}
+.avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 178px;
+    height: 178px;
+    line-height: 178px;
+    text-align: center;
+}
+.avatar {
+    width: 178px;
+    height: 178px;
+    display: block;
 }
 </style>

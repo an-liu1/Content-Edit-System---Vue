@@ -3,7 +3,7 @@ import request from './request'
 const getAPI = "http://159.89.121.159:3008/somoInit/searchSomoplayWebByPageAndSection";  //GET
 const otherAPI = "http://159.89.121.159:3008/somo/somoplayWeb";  //POST PUT DELETE
 const AuthAPI = "http://159.89.121.159:3008/auth/login";
-const imgAPI = "http://159.89.121.159:3008/somo/";
+const imgAPI = "http://159.89.121.159:3008/";
 
 export const getData = (address) => {
     return request('get', getAPI + address)
