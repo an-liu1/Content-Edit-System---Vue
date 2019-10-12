@@ -75,7 +75,8 @@ export default {
             );
             this.form = res.data[0];
             this.defaultSrc = getImg(
-                res.data[0].mainImageType + "/" + res.data[0].mainImage
+                // res.data[0].mainImageType + "/" + res.data[0].mainImage
+                res.data[0].mainImage
             );
 
             this.cropImg = this.defaultSrc;

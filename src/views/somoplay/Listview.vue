@@ -192,7 +192,8 @@ export default {
         imgs: function() {
             return function(item) {
                 let imgaddress = getImg(
-                    item.mainImageType + "/" + item.mainImage
+                    // item.mainImageType + "/" + item.mainImage
+                    item.mainImage
                 );
                 // this.imgList.push(imgaddress);
                 return imgaddress;
