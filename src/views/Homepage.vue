@@ -1181,7 +1181,7 @@ export default {
     computed: {
         imgs: function() {
             return function(item) {
-                return getImg(item.mainImageType + "/" + item.mainImage);
+                return getImg(item.mainImage);
             };
         }
     }

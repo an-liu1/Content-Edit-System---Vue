@@ -83,13 +83,13 @@
                     <el-input v-model="addForm.link"></el-input>
                 </el-form-item>
                 <el-form-item label="appName">
-                    <el-input v-model="addForm.appName" disabled="true"></el-input>
+                    <el-input v-model="addForm.appName" disabled="disabled"></el-input>
                 </el-form-item>
                 <el-form-item label="pageName">
-                    <el-input v-model="addForm.pageName" disabled="true"></el-input>
+                    <el-input v-model="addForm.pageName" disabled="disabled"></el-input>
                 </el-form-item>
                 <el-form-item label="sectionName">
-                    <el-input v-model="addForm.sectionName" disabled="true"></el-input>
+                    <el-input v-model="addForm.sectionName" disabled="disabled"></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
