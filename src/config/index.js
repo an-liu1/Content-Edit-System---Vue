@@ -3,7 +3,7 @@ module.exports = {
     dev: {
         proxyTable: {
             '/api/**': {
-                target: 'http://192.168.0.17:8080/', 
+                target: '"http://159.89.121.159:3008', 
                 changeOrigin: true,
                 pathRewrite: {
                     '^/': '/'

@@ -73,7 +73,21 @@
 
         <!-- EditBoard -->
         <el-dialog title="Eidt" :visible.sync="editVisible" width="30%">
-            <el-form ref="form" :model="form" label-width="70px"></el-form>
+            <el-form ref="form" :model="form" label-width="70px">
+                <el-form-item label="image">
+                    <el-upload
+                        class="avatar-uploader"
+                        action
+                        :http-request="handleAvatarSuccess"
+                        :show-file-list="false"
+                        :before-upload="beforeAvatarUpload"
+                    >
+                        <img v-if="imageUrl" :src="imageUrl" class="avatar" />
+                        <img v-else :src="eidtImg(form.mainImage)" class="avatar" />
+                        <!-- <i v-else class="el-icon-plus avatar-uploader-icon"></i> -->
+                    </el-upload>
+                </el-form-item>
+            </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="editVisible = false">Cancle</el-button>
                 <el-button type="primary" @click="saveEdit">Submit</el-button>
@@ -128,6 +142,8 @@ export default {
             },
             idx: -1,
             id: -1,
+            imageUrl: "",
+            imageData: "",
             imgList: []
         };
     },
@@ -144,6 +160,11 @@ export default {
                 // this.imgList.push(imgaddress);
                 return imgaddress;
             };
+        },
+        eidtImg: function() {
+            return function(mainImage) {
+                return getImg(mainImage);
+            };
         }
     },
     methods: {
@@ -157,7 +178,7 @@ export default {
             );
             this.pageTotal = res.data.length;
             this.tableData.map(a => {
-                this.imgList.push(getImg(a.mainImageType + "/" + a.mainImage));
+                this.imgList.push(getImg(a.mainImage));
             });
         },
 
@@ -204,13 +225,30 @@ export default {
         },
         // saveEdit
         async saveEdit() {
-            this.form.itemId = this.form._id;
-            let res = await editData(this.form);
+            // console.log(this.imageData)
+            let params = {
+                mainImageType: "somo/somoplayWeb",
+                imageData: this.imageData
+            };
+            try {
+                let res = await newData(params);
+                const { code, data } = res;
+                if (code === 0) {
+                    this.form.itemId = this.form._id;
+                    this.form.mainImage = data.mainImage;
+                    this.form.mainImageType = "somo/somoplayWeb";
+                    let result = await editData(this.form);
 
-            const { code } = res;
-            if (code === 0) {
-                this.editVisible = false;
-                this.$message.success(`Successfully Edit ${this.idx + 1} Row`);
+                    const { code } = result;
+                    if (code === 0) {
+                        this.editVisible = false;
+                        this.$message.success(
+                            `Successfully Edit ${this.idx + 1} Row`
+                        );
+                    }
+                }
+            } catch (e) {
+                this.$message.error(`Failed to update, try again please!`);
             }
         },
         //add
@@ -238,6 +276,52 @@ export default {
         handlePageChange(val) {
             this.query.pageIndex = val;
             this.handleData();
+        },
+        getBase64(file) {
+            return new Promise(function(resolve, reject) {
+                let reader = new FileReader();
+                let imgResult = "";
+                reader.readAsDataURL(file);
+                reader.onload = function() {
+                    imgResult = reader.result;
+                };
+                reader.onerror = function(error) {
+                    reject(error);
+                };
+                reader.onloadend = function() {
+                    resolve(imgResult);
+                };
+            });
+        },
+
+        handleAvatarSuccess(file) {
+            this.imageUrl = URL.createObjectURL(file.file);
+            this.getBase64(file.file).then(res => {
+                this.imageData = res;
+            });
+        },
+
+        beforeAvatarUpload(file) {
+            const imgAccept = [
+                "image/gif",
+                "image/jpeg",
+                "image/jpg",
+                "image/png"
+            ];
+
+            const isLt2M = file.size / 1024 / 1024 < 2;
+
+            if (imgAccept.indexOf(file.type) == -1) {
+                this.$message.error(
+                    "We only support PNG, GIF, JPEG, or JPG pictures."
+                );
+            }
+            if (!isLt2M) {
+                this.$message.error(
+                    "Please upload a picture smaller than 2 MB.!"
+                );
+            }
+            return file.type && isLt2M;
         }
     }
 };
