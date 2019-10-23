@@ -77,101 +77,17 @@
         </div>
 
         <!-- EditBoard -->
-        <el-dialog title="Eidt" :visible.sync="editVisible" width="35%">
-            <el-form ref="form" :model="form" label-width="150px">
-                <el-form-item label="nameEn">
-                    <el-input v-model="form.nameEn"></el-input>
-                </el-form-item>
-                <el-form-item label="nameCh">
-                    <el-input v-model="form.nameCh"></el-input>
-                </el-form-item>
-                <el-form-item label="nameTr">
-                    <el-input v-model="form.nameTr"></el-input>
-                </el-form-item>
-                <el-form-item label="image">
-                    <el-upload
-                        class="avatar-uploader"
-                        action
-                        :http-request="handleAvatarSuccess"
-                        :show-file-list="false"
-                        :before-upload="beforeAvatarUpload"
-                    >
-                        <img v-if="imageUrl" :src="imageUrl" class="avatar" />
-                        <img v-else :src="eidtImg(form.mainImage)" class="avatar" />
-                        <!-- <i v-else class="el-icon-plus avatar-uploader-icon"></i> -->
-                    </el-upload>
-                </el-form-item>
-                <el-form-item label="descriptionEn">
-                    <el-input type="textarea" size="medium" v-model="form.descriptionEn"></el-input>
-                </el-form-item>
-                <el-form-item label="descriptionCh">
-                    <el-input type="textarea" size="medium" v-model="form.descriptionCh"></el-input>
-                </el-form-item>
-                <el-form-item label="nameTr">
-                    <el-input type="textarea" size="medium" v-model="form.descriptionTr"></el-input>
-                </el-form-item>
-                <el-form-item label="backgroundColor">
-                    <el-input v-model="form.backgroundColor"></el-input>
-                </el-form-item>
-                <el-form-item label="nameColor">
-                    <el-input v-model="form.nameColor"></el-input>
-                </el-form-item>
-            </el-form>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="editVisible = false">Cancle</el-button>
-                <el-button type="primary" @click="saveEdit">Submit</el-button>
-            </span>
-        </el-dialog>
-
+        <Editdialog :form="form" :editForm="editForm" :idx="idx" :editVisible="editVisible" @close-dialogStatus="Close_dialog"></Editdialog>
         <!-- AddBoard -->
-        <el-dialog title="Add" :visible.sync="addVisible" width="35%">
-            <el-form ref="addForm" :model="addForm" label-width="150px">
-                <el-form-item label="nameEn">
-                    <el-input v-model="addForm.nameEn"></el-input>
-                </el-form-item>
-                <el-form-item label="nameCh">
-                    <el-input v-model="addForm.nameCh"></el-input>
-                </el-form-item>
-                <el-form-item label="nameTr">
-                    <el-input v-model="addForm.nameTr"></el-input>
-                </el-form-item>
-                <el-form-item label="descriptionEn">
-                    <el-input type="textarea" size="medium" v-model="addForm.descriptionEn"></el-input>
-                </el-form-item>
-                <el-form-item label="descriptionCh">
-                    <el-input type="textarea" size="medium" v-model="addForm.descriptionCh"></el-input>
-                </el-form-item>
-                <el-form-item label="descriptionTr">
-                    <el-input type="textarea" size="medium" v-model="addForm.descriptionTr"></el-input>
-                </el-form-item>
-                <el-form-item label="backgroundColor">
-                    <el-input v-model="addForm.backgroundColor"></el-input>
-                </el-form-item>
-                <el-form-item label="nameColor">
-                    <el-input v-model="addForm.nameColor" @keyup.enter.native="saveNew"></el-input>
-                </el-form-item>
-                <el-form-item label="appName">
-                    <el-input v-model="addForm.appName" disabled="disabled"></el-input>
-                </el-form-item>
-                <el-form-item label="pageName">
-                    <el-input v-model="addForm.pageName" disabled="disabled"></el-input>
-                </el-form-item>
-                <el-form-item label="sectionName">
-                    <el-input v-model="addForm.sectionName" disabled="disabled"></el-input>
-                </el-form-item>
-            </el-form>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="addVisible = false">Cancle</el-button>
-                <el-button type="primary" @click="saveNew">Submit</el-button>
-            </span>
-        </el-dialog>
+        <Adddialog :formData="formData" :addVisible="addVisible" @close-dialogStatus="Close_dialog"></Adddialog>
     </div>
 </template>
 
 <script>
-import { getData, newData, deleteData, editData, getImg } from "@/api/somoplay";
+import { getData, deleteData, getImg } from "@/api/somoplay";
+import Adddialog from "@/components/parts/AddBoard";
+import Editdialog from "@/components/parts/EditBoard";
 export default {
-    inject: ["reload"],
     name: "SlideShow",
     data() {
         return {
@@ -188,18 +104,37 @@ export default {
             addVisible: false,
             pageTotal: 0,
             form: {},
-            addForm: {
+            idx: -1,
+            id: -1,
+            imgList: [],
+            formData: {
+                nameEn: "",
+                nameCh: "",
+                nameTr: "",
+                image: "",
+                descriptionEn: "",
+                descriptionCh: "",
+                descriptionTr: "",
+                backgroundColor: "",
+                nameColor: "",
                 appName: "somoplay",
                 pageName: "home",
                 sectionName: "slideShow"
             },
-            idx: -1,
-            id: -1,
-            imageUrl: "",
-            imageData: "",
-            imgList: []
+            editForm: {
+                nameEn: "",
+                nameCh: "",
+                nameTr: "",
+                image: "",
+                descriptionEn: "",
+                descriptionCh: "",
+                descriptionTr: "",
+                backgroundColor: "",
+                nameColor: "",
+            }
         };
     },
+    components: { Adddialog, Editdialog },
     created() {
         this.handleData();
     },
@@ -212,11 +147,6 @@ export default {
                 );
                 // this.imgList.push(imgaddress);
                 return imgaddress;
-            };
-        },
-        eidtImg: function() {
-            return function(mainImage) {
-                return getImg(mainImage);
             };
         }
     },
@@ -281,105 +211,18 @@ export default {
             this.form = row;
             this.editVisible = true;
         },
-        // saveEdit
-        async saveEdit() {
-            // console.log(this.imageData)
-            let params = {
-                mainImageType: "somo/somoplayWeb",
-                imageData: this.imageData
-            };
-            try {
-                let res = await newData(params);
-                const { code, data } = res;
-                if (code === 0) {
-                    this.form.itemId = this.form._id;
-                    this.form.mainImage = data.mainImage;
-                    this.form.mainImageType = "somo/somoplayWeb";
-                    let result = await editData(this.form);
-
-                    const { code } = result;
-                    if (code === 0) {
-                        this.editVisible = false;
-                        this.$message.success(
-                            `Successfully Edit ${this.idx + 1} Row`
-                        );
-                    }
-                }
-            } catch (e) {
-                this.$message.error(`Failed to update, try again please!`);
-            }
-        },
         //add
         handleAdd() {
             this.addVisible = true;
         },
-        //save new
-        async saveNew() {
-            console.log(this.addForm);
-            for (const key in this.tableData[1]) {
-                if (this.addForm[key] == undefined) {
-                    this.addForm[key] = "";
-                }
-            }
-            let res = await newData(this.addForm);
-
-            const { code } = res;
-            if (code === 0) {
-                this.addVisible = false;
-                this.$message.success(`Successfully Insert a new Row`);
-                this.reload();
-            }
+        Close_dialog() {
+            this.addVisible = false;
+            this.editVisible = false;
         },
         // Paging
         handlePageChange(val) {
             this.query.pageIndex = val;
             this.handleData();
-        },
-        getBase64(file) {
-            return new Promise(function(resolve, reject) {
-                let reader = new FileReader();
-                let imgResult = "";
-                reader.readAsDataURL(file);
-                reader.onload = function() {
-                    imgResult = reader.result;
-                };
-                reader.onerror = function(error) {
-                    reject(error);
-                };
-                reader.onloadend = function() {
-                    resolve(imgResult);
-                };
-            });
-        },
-
-        handleAvatarSuccess(file) {
-            this.imageUrl = URL.createObjectURL(file.file);
-            this.getBase64(file.file).then(res => {
-                this.imageData = res;
-            });
-        },
-
-        beforeAvatarUpload(file) {
-            const imgAccept = [
-                "image/gif",
-                "image/jpeg",
-                "image/jpg",
-                "image/png"
-            ];
-
-            const isLt2M = file.size / 1024 / 1024 < 2;
-
-            if (imgAccept.indexOf(file.type) == -1) {
-                this.$message.error(
-                    "We only support PNG, GIF, JPEG, or JPG pictures."
-                );
-            }
-            if (!isLt2M) {
-                this.$message.error(
-                    "Please upload a picture smaller than 2 MB.!"
-                );
-            }
-            return file.type && isLt2M;
         }
     }
 };
@@ -413,28 +256,5 @@ export default {
     margin: auto;
     width: 40px;
     height: 40px;
-}
-.avatar-uploader .el-upload {
-    border: 1px dashed #d9d9d9;
-    border-radius: 6px;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-}
-.avatar-uploader .el-upload:hover {
-    border-color: #409eff;
-}
-.avatar-uploader-icon {
-    font-size: 28px;
-    color: #8c939d;
-    width: 178px;
-    height: 178px;
-    line-height: 178px;
-    text-align: center;
-}
-.avatar {
-    width: 178px;
-    height: 178px;
-    display: block;
 }
 </style>

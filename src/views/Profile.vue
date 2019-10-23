@@ -47,12 +47,12 @@
                     <el-row :gutter="10">
                         <el-col :xs="24" :sm="12" :md="12">
                             <el-form-item label="Last Login Date :">
-                                <el-input v-model="form.loginDate" :disabled="disabled"></el-input>
+                                <el-input v-model="form.loginDate" disabled="disabled"></el-input>
                             </el-form-item>
                         </el-col>
                         <el-col :xs="24" :sm="12" :md="12">
                             <el-form-item label="Register Date :">
-                                <el-input v-model="form.registerDate" :disabled="disabled"></el-input>
+                                <el-input v-model="form.registerDate" disabled="disabled"></el-input>
                             </el-form-item>
                         </el-col>
                     </el-row>

@@ -91,22 +91,6 @@ export default {
             return this.$route.path.replace("/", "");
         }
     }
-    // mounted() {
-    //     this.$http
-    //         .get(
-    //             "http://159.89.121.159:3008/somoInit/searchSomoplayWebByPageAndSection?appName=somoplay&page=0&size=1000"
-    //         )
-    //         .then(response => {
-    //             return response.data;
-    //         })
-    //         .then(res => {
-    //             var arr = [];
-    //             res.data.forEach(a => {
-    //                 arr.push(a.sectionName);
-    //             });
-    //             this.menu = new Set(arr);
-    //         });
-    // }
 };
 </script>
 

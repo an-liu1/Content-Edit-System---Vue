@@ -67,58 +67,23 @@
         </div>
 
         <!-- EditBoard -->
-        <el-dialog title="Eidt" :visible.sync="editVisible" width="35%">
-            <el-form ref="form" :model="form" label-width="150px">
-                <el-form-item label="nameEn">
-                    <el-input v-model="form.nameEn"></el-input>
-                </el-form-item>
-                <el-form-item label="nameCh">
-                    <el-input v-model="form.nameCh"></el-input>
-                </el-form-item>
-                <el-form-item label="nameTr">
-                    <el-input v-model="form.nameTr"></el-input>
-                </el-form-item>
-            </el-form>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="editVisible = false">Cancle</el-button>
-                <el-button type="primary" @click="saveEdit">Submit</el-button>
-            </span>
-        </el-dialog>
-
+        <Editdialog
+            :form="form"
+            :editForm="editForm"
+            :idx="idx"
+            :editVisible="editVisible"
+            @close-dialogStatus="Close_dialog"
+        ></Editdialog>
         <!-- AddBoard -->
-        <el-dialog title="Add" :visible.sync="addVisible" width="35%">
-            <el-form ref="addForm" :model="addForm" label-width="150px">
-                <el-form-item label="nameEn">
-                    <el-input v-model="addForm.nameEn"></el-input>
-                </el-form-item>
-                <el-form-item label="nameCh">
-                    <el-input v-model="addForm.nameCh"></el-input>
-                </el-form-item>
-                <el-form-item label="nameTr">
-                    <el-input v-model="addForm.nameTr" @keyup.enter.native="saveNew"></el-input>
-                </el-form-item>
-                <el-form-item label="appName">
-                    <el-input v-model="addForm.appName" disabled="disabled"></el-input>
-                </el-form-item>
-                <el-form-item label="pageName">
-                    <el-input v-model="addForm.pageName" disabled="disabled"></el-input>
-                </el-form-item>
-                <el-form-item label="sectionName">
-                    <el-input v-model="addForm.sectionName" disabled="disabled"></el-input>
-                </el-form-item>
-            </el-form>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="addVisible = false">Cancle</el-button>
-                <el-button type="primary" @click.enter="saveNew">Submit</el-button>
-            </span>
-        </el-dialog>
+        <Adddialog :formData="formData" :addVisible="addVisible" @close-dialogStatus="Close_dialog"></Adddialog>
     </div>
 </template>
 
 <script>
-import { getData, newData, deleteData, editData } from "@/api/somoplay";
+import { getData, deleteData } from "@/api/somoplay";
+import Adddialog from "@/components/parts/AddBoard";
+import Editdialog from "@/components/parts/EditBoard";
 export default {
-    inject: ["reload"],
     name: "Footer",
     data() {
         return {
@@ -135,15 +100,24 @@ export default {
             addVisible: false,
             pageTotal: 0,
             form: {},
-            addForm: {
+            formData: {
+                nameEn: "",
+                nameCh: "",
+                nameTr: "",
                 appName: "somoplay",
                 pageName: "all",
                 sectionName: "footer"
+            },
+            editForm: {
+                nameEn: "",
+                nameCh: "",
+                nameTr: ""
             },
             idx: -1,
             id: -1
         };
     },
+    components: { Adddialog, Editdialog },
     created() {
         this.handleData();
     },
@@ -195,37 +169,14 @@ export default {
             this.form = row;
             this.editVisible = true;
         },
-        // saveEdit
-        async saveEdit() {
-            this.form.itemId = this.form._id;
-            let res = await editData(this.form);
-
-            const { code } = res;
-            if (code === 0) {
-                this.editVisible = false;
-                this.$message.success(`Successfully Edit ${this.idx + 1} Row`);
-            }
-        },
         //add
         handleAdd() {
             this.addVisible = true;
         },
-        //save new
-        async saveNew() {
-            console.log(this.addForm);
-            for (const key in this.tableData[1]) {
-                if (this.addForm[key] == undefined) {
-                    this.addForm[key] = "";
-                }
-            }
-            let res = await newData(this.addForm);
 
-            const { code } = res;
-            if (code === 0) {
-                this.addVisible = false;
-                this.$message.success(`Successfully Insert a new Row`);
-                this.reload();
-            }
+        Close_dialog() {
+            this.addVisible = false;
+            this.editVisible = false;
         },
         // Paging
         handlePageChange(val) {
