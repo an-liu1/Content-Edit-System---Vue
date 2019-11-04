@@ -3,6 +3,13 @@ import request from './request'
 const getAPI = "http://159.89.121.159:3008/somoInit/searchSomoplayWebByPageAndSection";  //GET
 const otherAPI = "http://159.89.121.159:3008/somo/somoplayWeb";  //POST PUT DELETE
 const AuthAPI = "http://159.89.121.159:3008/auth/login";
+// const Register = "http://159.89.121.159:3008/auth/register";
+// {
+// 	"email":"admin@somoplay.com",
+// 	"password": "111111",
+// 	"appId": "6",
+// 	"userType": "61"
+// }
 const imgAPI = "http://159.89.121.159:3008/somo/somoplayWeb/";
 
 export const getData = (address) => {

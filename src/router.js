@@ -25,7 +25,7 @@ export default new Router({
                 { name: 'S-title', path: 'S-title', component: () => import('./views/somoplay/Title'), meta: { title: 'S - Title' } },
                 { name: 'S-map', path: 'S-map', component: () => import('./views/somoplay/Map'), meta: { title: 'S - Map' } },
                 { name: 'S-infoList', path: 'S-infoList', component: () => import('./views/somoplay/Infolist'), meta: { title: 'S - InfoList' } },
-                { name: 'S-footer', path: 'S-footer', component: () => import('./views/somoplay/Footer'), meta: { title: 'S - Footer' } },
+                { name: 'S-social', path: 'S-social', component: () => import('./views/somoplay/Social'), meta: { title: 'S - Social' } },
                 { name: 'profile', path: 'profile', component: () => import('./views/Profile'), meta: { title: 'Profile' } },
 
             ]

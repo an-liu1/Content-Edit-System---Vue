@@ -30,6 +30,10 @@
                 <div class="login-btn">
                     <el-button type="primary" @click="submitForm()">Sign Up</el-button>
                 </div>
+                <p class="login-tips">
+                    Already have account?
+                    <router-link to="/login"> Log In</router-link>
+                </p>
             </el-form>
         </div>
     </div>

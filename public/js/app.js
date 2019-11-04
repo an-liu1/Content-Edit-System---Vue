@@ -4,34 +4,6 @@
 
     var Ubold = function() {};
 
-    Ubold.prototype.initStickyMenu = function() {
-        $(window).scroll(function() {
-            var scroll = $(window).scrollTop();
-        
-            if (scroll >= 50) {
-                $(".sticky").addClass("nav-sticky");
-            } else {
-                $(".sticky").removeClass("nav-sticky");
-            }
-        });
-    },
-
-    Ubold.prototype.initSmoothLink = function() {
-        $('.navbar-nav a').on('click', function(event) {
-            var $anchor = $(this);
-            $('html, body').stop().animate({
-                scrollTop: $($anchor.attr('href')).offset().top - 50
-            }, 1500, 'easeInOutExpo');
-            event.preventDefault();
-        });
-    },
-
-    Ubold.prototype.initScrollspy = function() {
-        $("#navbarCollapse").scrollspy({
-            offset: 50
-        });
-    },
-
     Ubold.prototype.initContact = function() {
         
         $('#contact-form').submit(function() {
@@ -84,9 +56,6 @@
 
 
     Ubold.prototype.init = function() {
-        this.initStickyMenu();
-        this.initSmoothLink();
-        this.initScrollspy();
         this.initContact();
         this.initBacktoTop();
     },
