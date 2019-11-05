@@ -120,7 +120,7 @@
        
         <!-- Back to top -->
         <a href="#" class="back-to-top" id="back-to-top">
-            <i class="mdi mdi-chevron-up"></i>
+            <i class="fas fa-arrow-up"></i>
         </a>
     </div>
     

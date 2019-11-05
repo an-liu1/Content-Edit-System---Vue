@@ -17,42 +17,17 @@
                 </div>
                 <!-- end row -->
                 <div class="row mb-4">
-                    <div class="col-lg-4">
+                    <div class="col-lg-3" v-for="(item,index) in contact" :key="index">
                         <div class="contact-content text-center mt-4">
                             <div class="contact-icon mb-2">
                                 <i class="mdi mdi-email-outline text-info h2"></i>
                             </div>
                             <div class="contact-details text-white">
-                                <h5 class="text-white">E-mail</h5>
-                                <p class="text-white-50">example@abc.com</p>
+                                <h5 class="text-white">{{item.nameEn}}</h5>
+                                <p class="text-white-50">{{item.descriptionEn}}</p>
                             </div>
                         </div>
                     </div>
-                    <!-- end col -->
-                    <div class="col-lg-4">
-                        <div class="contact-content text-center mt-4">
-                            <div class="contact-icon mb-2">
-                                <i class="mdi mdi-cellphone-iphone text-info h2"></i>
-                            </div>
-                            <div class="contact-details">
-                                <h5 class="text-white">Phone</h5>
-                                <p class="text-white-50">012-345-6789</p>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- end col -->
-                    <div class="col-lg-4">
-                        <div class="contact-content text-center mt-4">
-                            <div class="contact-icon mb-2">
-                                <i class="mdi mdi-map-marker text-info h2"></i>
-                            </div>
-                            <div class="contact-details">
-                                <h5 class="text-white">Address</h5>
-                                <p class="text-white-50">4413 Redbud Drive, New York</p>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- end col -->
                 </div>
                 <!-- end row -->
 
@@ -151,6 +126,28 @@
         </section>
         <!-- contact end -->
 </template>
+
+<script>
+import { getData} from "@/api/somoplay";
+export default {
+  data() {
+    return {
+      contact: []
+    };
+  },
+  created(){
+      this.getContactInfo()
+  },
+  methods: {
+    async getContactInfo() {
+      let res = await getData(
+        "?appName=somoplay&pageName=contact&sectionName=infoList"
+      );
+      this.contact = res.data;
+    }
+  }
+};
+</script>
 
 <style>
 /*******************

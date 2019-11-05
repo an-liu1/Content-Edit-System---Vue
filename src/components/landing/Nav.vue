@@ -22,9 +22,9 @@
           <li class="nav-item" v-for="(item, index) in navItem" :key="index">
             <a :href="'#' + item.nameEn" class="nav-link">{{item.nameEn}}</a>
           </li>
-          <li class="nav-item">
+          <!-- <li class="nav-item">
             <a href="#/dashboard" class="nav-link">Admin</a>
-          </li>
+          </li> -->
         </ul>
       </div>
     </div>
