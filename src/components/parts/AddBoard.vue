@@ -92,7 +92,7 @@ export default {
                         let result = await newData(this.addForm);
                         const { code } = result;
                         if (code === 0) {
-                            this.addVisible = false;
+                            this.vis = false;
                             this.$message.success(
                                 `Successfully Insert a new Row`
                             );
@@ -113,7 +113,7 @@ export default {
                 let result = await newData(this.addForm);
                 const { code } = result;
                 if (code === 0) {
-                    this.addVisible = false;
+                    this.vis = false;
                     this.$message.success(`Successfully Insert a new Row`);
                     this.reload();
                 }

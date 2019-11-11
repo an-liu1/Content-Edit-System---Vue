@@ -13,6 +13,8 @@ import Element from 'element-ui';
 Vue.use(Element, { size: 'small', zIndex: 3000});
 import 'element-ui/lib/theme-chalk/index.css';
 import '@/config/index'
+import CKEditor from '@ckeditor/ckeditor5-vue';
+Vue.use( CKEditor );
 
 
 router.beforeEach((to, from, next) => {

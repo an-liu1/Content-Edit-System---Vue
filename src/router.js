@@ -28,7 +28,7 @@ export default new Router({
                 { name: 'S-footer', path: 'S-footer', component: () => import('./views/somoplay/Footer'), meta: { title: 'S - Footer' } },
                 { name: 'S-social', path: 'S-social', component: () => import('./views/somoplay/Social'), meta: { title: 'S - Social' } },
                 { name: 'profile', path: 'profile', component: () => import('./views/Profile'), meta: { title: 'Profile' } },
-
+                { name: 'email-Template', path: 'email-Template', component: () => import('./views/Email-Template'), meta: { title: 'Email-Template' } }
             ]
         },
         { name: 'login', path: '/login', component: () => import('./components/Login.vue'), meta: { title: 'Login' } },

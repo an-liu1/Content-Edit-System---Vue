@@ -36,6 +36,13 @@
             </template>
 
             <template>
+                <router-link tag="el-menu-item" to="/email-Template">
+                    <i class="el-icon-message"></i>
+                    <span class="span">&nbsp;&nbsp; Email Template</span>
+                </router-link>
+            </template>
+
+            <template>
                 <router-link tag="el-menu-item" to="/profile">
                     <i class="el-icon-user-solid"></i>
                     <span class="span">&nbsp;&nbsp; Profile</span>

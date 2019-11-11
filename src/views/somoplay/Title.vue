@@ -175,6 +175,7 @@ export default {
         },
         Close_dialog() {
             this.addVisible = false;
+            this.editVisible = false;
         },
         // Paging
         handlePageChange(val) {

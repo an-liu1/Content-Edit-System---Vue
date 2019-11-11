@@ -45,8 +45,11 @@ export default {
         idx: Number
     },
     watch: {
-        editVisible(newValue) {
-            this.vis = newValue;
+        editVisible: {
+            handler(newValue) {
+                this.vis = newValue;
+            },
+            immediate: true
         }
     },
     computed: {
@@ -85,7 +88,7 @@ export default {
 
                         const { code } = result;
                         if (code === 0) {
-                            this.editVisible = false;
+                            this.vis = false;
                             this.$message.success(
                                 `Successfully Edit ${this.idx + 1} Row`
                             );
@@ -100,7 +103,7 @@ export default {
 
                 const { code } = result;
                 if (code === 0) {
-                    this.editVisible = false;
+                    this.vis = false;
                     this.$message.success(
                         `Successfully Edit ${this.idx + 1} Row`
                     );

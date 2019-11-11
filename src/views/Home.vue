@@ -24,7 +24,7 @@
 
 <script>
 import Header from "@/components/Header.vue";
-import Side from "@/components/Side.vue";
+import Side from "@/components/SideBar.vue";
 import bus from "@/components/bus.js";
 import Tags from "@/components/Tags.vue";
 
