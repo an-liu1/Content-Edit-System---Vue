@@ -1,13 +1,13 @@
 <template>
     <div class="container1">
         <ckeditor
-            style="height: 920px; border: 1px solid #ccc;"
             :editor="editor"
             v-model="editorData"
             :config="editorConfig"
-            @input="onEditorInput"
         ></ckeditor>
         <!-- <button v-on:click="emptyEditor()">Empty the editor</button> -->
+        <hr>
+
     </div>
 </template>
 
@@ -21,16 +21,16 @@ export default {
             editorData: "<p>Content of the editor.</p>",
             editorConfig: {
                 // toolbar: [ 'bold', 'italic', '|', 'link' ]
+                ckfinder: {
+                uploadUrl: 'http://192.168.0.17:8080/'
+            }
             }
         };
     },
     methods: {
         emptyEditor() {
             this.editorData = "";
-        },
-        onEditorInput() {
-            console.log(this.editorData);
-        }
+        }  
     }
 };
 </script>
