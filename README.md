@@ -104,7 +104,7 @@ password: 111111
     }
 ```
 
-##　Ultimate Goal
+## Ultimate Goal
 
 1. All elements in the website is editable in the dashboard (including position, font-size, font color, font, background-color, even submenu item)
 2. Everyone can make their own basic website through this system
