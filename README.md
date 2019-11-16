@@ -104,6 +104,12 @@ password: 111111
 }
 ```
 
+## ScreenShot
+
+<img src="https://github.com/an-liu1/Content-Edit-System---Vue/edit/master/public/images/content-management-gif.gif"/>
+<img src="https://github.com/an-liu1/Content-Edit-System---Vue/edit/master/public/images/content-management-admin.png"/>
+<img src="https://github.com/an-liu1/Content-Edit-System---Vue/edit/master/public/images/content-management-landing.png"/>
+
 ## Ultimate Goal
 
 1. All elements in the website is editable in the dashboard (including position, font-size, font color, font, background-color, even submenu item)
