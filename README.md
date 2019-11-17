@@ -106,9 +106,10 @@ password: 111111
 
 ## ScreenShot
 
-<img src="https://github.com/an-liu1/Content-Edit-System---Vue/edit/master/public/images/content-management-gif.gif"/>
-<img src="https://github.com/an-liu1/Content-Edit-System---Vue/edit/master/public/images/content-management-admin.png"/>
-<img src="https://github.com/an-liu1/Content-Edit-System---Vue/edit/master/public/images/content-management-landing.png"/>
+![image](https://github.com/an-liu1/Content-Edit-System---Vue/edit/master/public/images/content-management-gif.gif)
+![image](https://github.com/an-liu1/Content-Edit-System---Vue/edit/master/public/images/content-management-admin.png)
+![image](https://github.com/an-liu1/Content-Edit-System---Vue/edit/master/public/images/content-management-landing.png)
+<img src="https://github.com/an-liu1/Content-Edit-System---Vue/edit/master/public/images/home-img.png" width="900" height="619"/>
 
 ## Ultimate Goal
 
