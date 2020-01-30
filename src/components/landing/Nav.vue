@@ -1,8 +1,10 @@
 <template>
-  <nav class="navbar navbar-expand-lg fixed-top navbar-custom sticky sticky-dark">
+  <nav
+    class="navbar navbar-expand-lg fixed-top navbar-custom sticky sticky-dark"
+  >
     <div class="container-fluid">
       <!-- LOGO -->
-      <a class="logo text-uppercase" href="/index" v-for="(item,index) in logo" :key="index">
+      <a class="logo text-uppercase" href="/" v-for="(item, index) in logo" :key="index">
         <img :src="imgs(item)" alt height="30" />
       </a>
 
@@ -20,11 +22,11 @@
       <div class="collapse navbar-collapse" id="navbarCollapse">
         <ul class="navbar-nav mx-auto navbar-center" id="mySidenav">
           <li class="nav-item" v-for="(item, index) in navItem" :key="index">
-            <a :href="'#' + item.nameEn" class="nav-link">{{item.nameEn}}</a>
+            <a :href="'#' + item.nameEn" class="nav-link">{{ item.nameEn }}</a>
           </li>
-          <!-- <li class="nav-item">
+          <li class="nav-item">
             <a href="#/dashboard" class="nav-link">Admin</a>
-          </li> -->
+          </li>
         </ul>
       </div>
     </div>
@@ -40,9 +42,9 @@ export default {
       logo: {}
     };
   },
-  created(){
-      this.getNav()
-      this.getLogo()
+  created() {
+    this.getNav();
+    this.getLogo();
   },
   methods: {
     async getNav() {
@@ -62,69 +64,69 @@ export default {
     imgs: function() {
       return function(item) {
         return getImg(item.mainImage);
-      }
+      };
     }
   }
 };
 </script>
 
-<style >
+<style>
 /**BACK TO TOP**/
 .back-to-top {
-    width: 30px;
-    height: 30px;
-    position: fixed;
-    bottom: 10px;
-    right: 20px;
-    display: none;
-    text-align: center;
-    z-index: 10000;
-    border-radius: 3px;
-    background-color: #673ab7;
-    -webkit-transition: all 0.5s;
-    transition: all 0.5s;
+  width: 30px;
+  height: 30px;
+  position: fixed;
+  bottom: 10px;
+  right: 20px;
+  display: none;
+  text-align: center;
+  z-index: 10000;
+  border-radius: 3px;
+  background-color: #673ab7;
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
 }
 
 .back-to-top i {
-    color: #ffffff;
-    font-size: 22px;
-    display: block;
-    line-height: 30px;
+  color: #ffffff;
+  font-size: 22px;
+  display: block;
+  line-height: 30px;
 }
 
 /******************
     2.Navbar
 *******************/
 .navbar-custom {
-    padding: 20px 0px;
-    width: 100%;
-    border-radius: 0px;
-    z-index: 999;
-    margin-bottom: 0px;
-    background-color: #ffffff;
+  padding: 20px 0px;
+  width: 100%;
+  border-radius: 0px;
+  z-index: 999;
+  margin-bottom: 0px;
+  background-color: #ffffff;
 }
 
 .navbar-custom .navbar-nav .nav-item .nav-link {
-    line-height: 10px;
-    color: rgba(0, 0, 0, 0.6);
-    padding: 6px 10px;
-    margin: 0 7px;
-    font-weight: 600;
+  line-height: 10px;
+  color: rgba(0, 0, 0, 0.6);
+  padding: 6px 10px;
+  margin: 0 7px;
+  font-weight: 600;
 }
 
 .navbar-custom .navbar-nav .nav-item .nav-link:hover,
 .navbar-custom .navbar-nav .nav-item .nav-link:active {
-    color: #673ab7;
+  color: #673ab7;
 }
 
 .navbar-custom .navbar-nav .nav-item.active .nav-link {
-    color: #ffffff;
+  color: #ffffff;
 }
 
 .navbar-toggler {
-    font-size: 24px;
-    margin-top: 5px;
-    margin-bottom: 0px;
-    color: #000000;
+  font-size: 24px;
+  margin-top: 5px;
+  margin-bottom: 0px;
+  color: #000000;
 }
 </style>
