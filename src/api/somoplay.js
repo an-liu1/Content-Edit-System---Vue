@@ -1,9 +1,9 @@
 import request from "./request";
 
 const getAPI =
-  "http://159.89.121.159:3008/somoInit/searchSomoplayWebByPageAndSection"; //GET
-const otherAPI = "http://159.89.121.159:3008/somo/somoplayWeb"; //POST PUT DELETE
-const AuthAPI = "http://159.89.121.159:3008/auth/login";
+  "http://159.89.121.159/somoInit/searchSomoplayWebByPageAndSection"; //GET
+const otherAPI = "http://159.89.121.159/somo/somoplayWeb"; //POST PUT DELETE
+const AuthAPI = "http://159.89.121.159/auth/login";
 // const Register = "http://159.89.121.159:3008/auth/register";
 // {
 // 	"email":"admin@somoplay.com",
@@ -11,7 +11,7 @@ const AuthAPI = "http://159.89.121.159:3008/auth/login";
 // 	"appId": "6",
 // 	"userType": "61"
 // }
-const imgAPI = "http://159.89.121.159:3008/somo/somoplayWeb/";
+const imgAPI = "http://159.89.121.159/somo/somoplayWeb/";
 
 export const getData = address => {
   return request("get", getAPI + address);
